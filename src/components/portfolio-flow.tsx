@@ -5,7 +5,6 @@ import type { ComponentType } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   ReactFlow,
-  Background,
   useNodesState,
   useEdgesState,
   Node,
@@ -27,6 +26,7 @@ import {
 } from "lucide-react";
 import { PortfolioNavbar } from "./portfolio-navbar";
 import { CustomCursor } from "./custom-cursor";
+import { DotBackground } from "./dot-background";
 
 type SectionNodeData = {
   delay?: number;
@@ -77,11 +77,12 @@ function SectionNode({ data }: NodeProps<Node<SectionNodeData>>) {
         type: "spring",
         stiffness: 200,
         damping: 20,
+        scale: {
+          duration: 0.3,
+          ease: "easeOut",
+        },
       }}
-      whileHover={{ 
-        scale: 1.08,
-        transition: { duration: 0.3 }
-      }}
+      whileHover={{ scale: 1.08 }}
       onClick={() => data.onClick()}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -390,8 +391,8 @@ function FlowContent() {
     },
   ];
 
-  const [nodes] = useNodesState(initialNodes);
-  const [edges] = useEdgesState(initialEdges);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
   return (
     <>
@@ -399,21 +400,24 @@ function FlowContent() {
       <PortfolioNavbar onNavigate={handleNavigate} />
       
       <div className="w-screen h-screen pt-[73px] relative overflow-hidden">
+        <DotBackground />
         
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
           nodeTypes={nodeTypes}
           fitView
           attributionPosition="bottom-right"
           proOptions={{ hideAttribution: true }}
           className="relative z-[2]"
           nodesDraggable={true}
-          panOnDrag={true}
+          panOnDrag={[0, 1, 2]}
+          panOnScroll={true}
+          selectionOnDrag={false}
           zoomOnScroll={true}
         >
-          <Background gap={24} size={1.5} color="rgba(107, 159, 127, 0.06)" />
-          
           {/* SVG Gradients for edges */}
           <svg style={{ position: 'absolute', width: 0, height: 0 }}>
             <defs>

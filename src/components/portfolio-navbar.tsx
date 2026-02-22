@@ -1,11 +1,26 @@
-import { motion } from "motion/react";
-import { User, TrendingUp, Briefcase, Sparkles, Code2, GraduationCap, Mail } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import {
+  User,
+  TrendingUp,
+  Briefcase,
+  Sparkles,
+  Code2,
+  GraduationCap,
+  Mail,
+  Moon,
+  Sun,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "./ui/button";
 
 interface PortfolioNavbarProps {
   onNavigate: (nodeId: string) => void;
 }
 
 export function PortfolioNavbar({ onNavigate }: PortfolioNavbarProps) {
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const navItems = [
     { id: "profile", label: "Profile", icon: User },
     { id: "impact", label: "Impact", icon: TrendingUp },
@@ -44,40 +59,78 @@ export function PortfolioNavbar({ onNavigate }: PortfolioNavbarProps) {
             </div>
           </motion.div>
           
-          <div className="flex items-center gap-1">
-            {navItems.map((item, index) => {
-              const Icon = item.icon;
-              return (
-                <motion.button
-                  key={item.id}
-                  initial={{ y: -20, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 * index, duration: 0.4 }}
-                  onClick={() => onNavigate(item.id)}
-                  className="group relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
-                >
-                  {/* Magnetic hover effect background */}
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                  />
-                  
-                  <Icon className="w-4 h-4 relative z-10 group-hover:rotate-12 transition-transform" />
-                  <span className="hidden md:inline relative z-10 group-hover:translate-x-0.5 transition-transform">
-                    {item.label}
-                  </span>
-                  
-                  {/* Animated underline */}
-                  <motion.div
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary to-primary/0"
-                    initial={{ scaleX: 0 }}
-                    whileHover={{ scaleX: 1 }}
-                    transition={{ duration: 0.3 }}
-                  />
-                </motion.button>
-              );
-            })}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              {navItems.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <motion.button
+                    key={item.id}
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.1 * index, duration: 0.4 }}
+                    onClick={() => onNavigate(item.id)}
+                    className="group relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
+                  >
+                    {/* Magnetic hover effect background */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    />
+
+                    <Icon className="w-4 h-4 relative z-10 group-hover:rotate-12 transition-transform" />
+                    <span className="hidden md:inline relative z-10 group-hover:translate-x-0.5 transition-transform">
+                      {item.label}
+                    </span>
+
+                    {/* Animated underline */}
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary to-primary/0"
+                      initial={{ scaleX: 0 }}
+                      whileHover={{ scaleX: 1 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Toggle theme"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              className="relative overflow-hidden"
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {isDark ? (
+                  <motion.span
+                    key="sun"
+                    initial={{ opacity: 0, rotate: -90, scale: 0.65, y: 2 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, rotate: 90, scale: 0.65, y: -2 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <Sun className="h-4 w-4" />
+                  </motion.span>
+                ) : (
+                  <motion.span
+                    key="moon"
+                    initial={{ opacity: 0, rotate: 90, scale: 0.65, y: 2 }}
+                    animate={{ opacity: 1, rotate: 0, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, rotate: -90, scale: 0.65, y: -2 }}
+                    transition={{ duration: 0.22, ease: "easeOut" }}
+                    className="absolute inset-0 flex items-center justify-center"
+                  >
+                    <Moon className="h-4 w-4" />
+                  </motion.span>
+                )}
+              </AnimatePresence>
+              <span className="sr-only">Toggle theme</span>
+            </Button>
           </div>
         </div>
       </div>
