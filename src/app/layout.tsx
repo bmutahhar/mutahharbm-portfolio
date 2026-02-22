@@ -8,19 +8,26 @@ export const metadata: Metadata = {
   description: "Interactive portfolio website built with React Flow.",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+type RootLayoutProps = {
+  children: ReactNode;
+};
+
+const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <body className="min-h-screen bg-background text-foreground antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
-          enableSystem
+          defaultTheme="dark"
+          enableSystem={false}
           disableTransitionOnChange
+          storageKey="portfolio-theme"
         >
           {children}
         </ThemeProvider>
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

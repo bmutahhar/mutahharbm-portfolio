@@ -70,11 +70,11 @@ export function PortfolioNavbar({ onNavigate }: PortfolioNavbarProps) {
                     animate={{ y: 0, opacity: 1 }}
                     transition={{ delay: 0.1 * index, duration: 0.4 }}
                     onClick={() => onNavigate(item.id)}
-                    className="group relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground transition-colors overflow-hidden"
+                    className="group relative flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-accent-foreground transition-colors overflow-hidden"
                   >
                     {/* Magnetic hover effect background */}
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute inset-0 bg-gradient-to-br from-foreground/8 to-foreground/4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
                       whileHover={{ scale: 1.05 }}
                       transition={{ type: "spring", stiffness: 400, damping: 25 }}
                     />
@@ -86,7 +86,7 @@ export function PortfolioNavbar({ onNavigate }: PortfolioNavbarProps) {
 
                     {/* Animated underline */}
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/0 via-primary to-primary/0"
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-foreground/0 via-foreground/35 to-foreground/0"
                       initial={{ scaleX: 0 }}
                       whileHover={{ scaleX: 1 }}
                       transition={{ duration: 0.3 }}
