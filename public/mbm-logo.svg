@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="220" viewBox="0 0 640 220" fill="none" role="img" aria-label="mbm logo">
+  <defs>
+    <linearGradient id="mbm-gradient" x1="20" y1="20" x2="620" y2="200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7bb685" />
+      <stop offset="1" stop-color="#4f7e57" />
+    </linearGradient>
+  </defs>
+
+  <g stroke="url(#mbm-gradient)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 160V70C40 52 54 38 72 38C90 38 104 52 104 70V160" />
+    <path d="M104 82C104 57 124 38 148 38C172 38 192 57 192 82V160" />
+
+    <path d="M250 166V20" />
+    <path d="M278 62C287 47 303 38 321 38C355 38 382 65 382 99C382 133 355 160 321 160C303 160 287 151 278 136" />
+
+    <path d="M434 160V70C434 52 448 38 466 38C484 38 498 52 498 70V160" />
+    <path d="M498 82C498 57 518 38 542 38C566 38 586 57 586 82V160" />
+  </g>
+
+  <circle cx="620" cy="152" r="9" fill="url(#mbm-gradient)" />
+</svg>

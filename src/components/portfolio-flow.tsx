@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Edge, Node } from "@xyflow/react";
 import {
   ReactFlow,
@@ -15,11 +15,12 @@ import {
   type FlowNodeData,
   mobileEdges,
   mobileNodes,
+  tabletEdges,
+  tabletNodes,
 } from "../data/flow-layout-data";
 import { CustomCursor } from "./custom-cursor";
 import { DotBackground } from "./dot-background";
 import { GlowingEdge } from "./glowing-edge";
-import { LoadingScreen } from "./loading-screen";
 import { ContactNode } from "./nodes/contact-node";
 import { EducationNode } from "./nodes/education-node";
 import { ExperienceNode } from "./nodes/experience-node";
@@ -31,7 +32,8 @@ import { WorkNode } from "./nodes/work-node";
 import { PortfolioNavbar } from "./portfolio-navbar";
 
 const FLOW_PADDING = 0.24;
-const DESKTOP_MEDIA_QUERY = "(min-width: 1024px)";
+const DESKTOP_MIN_WIDTH = 1024;
+const TABLET_MIN_WIDTH = 768;
 
 const nodeTypes = {
   "profile-node": ProfileNode,
@@ -57,14 +59,26 @@ const cloneNodes = (nodes: Array<Node<FlowNodeData>>) =>
 
 const cloneEdges = (edges: Array<Edge>) => edges.map((edge) => ({ ...edge }));
 
-const getIsDesktop = () =>
-  typeof window !== "undefined" && window.matchMedia(DESKTOP_MEDIA_QUERY).matches;
+type ViewportMode = "desktop" | "tablet" | "mobile";
+
+const getViewportMode = (): ViewportMode => {
+  if (typeof window === "undefined") {
+    return "desktop";
+  }
+
+  if (window.innerWidth >= DESKTOP_MIN_WIDTH) {
+    return "desktop";
+  }
+
+  if (window.innerWidth >= TABLET_MIN_WIDTH) {
+    return "tablet";
+  }
+
+  return "mobile";
+};
 
 const FlowContent = () => {
-  const [isDesktop, setIsDesktop] = useState(getIsDesktop);
-  const [showLoadingScreen, setShowLoadingScreen] = useState(true);
-  const hasBootstrappedRef = useRef(false);
-  const loadingTimeoutRef = useRef<number | null>(null);
+  const [viewportMode, setViewportMode] = useState<ViewportMode>(getViewportMode);
 
   const { fitView } = useReactFlow();
   const [nodes, setNodes, onNodesChange] = useNodesState(cloneNodes(desktopNodes));
@@ -72,22 +86,30 @@ const FlowContent = () => {
 
   const activeLayout = useMemo(
     () => ({
-      nodes: isDesktop ? desktopNodes : mobileNodes,
-      edges: isDesktop ? desktopEdges : mobileEdges,
+      nodes:
+        viewportMode === "desktop"
+          ? desktopNodes
+          : viewportMode === "tablet"
+            ? tabletNodes
+            : mobileNodes,
+      edges: viewportMode === "desktop" ? desktopEdges : viewportMode === "tablet" ? tabletEdges : mobileEdges,
     }),
-    [isDesktop],
+    [viewportMode],
+  );
+  const activeNodeIds = useMemo(
+    () => activeLayout.nodes.map((node) => ({ id: node.id })),
+    [activeLayout.nodes],
   );
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(DESKTOP_MEDIA_QUERY);
-    const handleMediaQueryChange = (event: MediaQueryListEvent) => {
-      setIsDesktop(event.matches);
+    const handleResize = () => {
+      setViewportMode(getViewportMode());
     };
 
-    mediaQuery.addEventListener("change", handleMediaQueryChange);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+      window.removeEventListener("resize", handleResize);
     };
   }, []);
 
@@ -96,31 +118,16 @@ const FlowContent = () => {
     setEdges(cloneEdges(activeLayout.edges));
     const frame = window.requestAnimationFrame(() => {
       fitView({
-        nodes: activeLayout.nodes.map((node) => ({ id: node.id })),
+        nodes: activeNodeIds,
         padding: FLOW_PADDING,
         duration: 0,
       });
-
-      if (!hasBootstrappedRef.current) {
-        hasBootstrappedRef.current = true;
-        loadingTimeoutRef.current = window.setTimeout(() => {
-          setShowLoadingScreen(false);
-        }, 650);
-      }
     });
 
     return () => {
       window.cancelAnimationFrame(frame);
     };
-  }, [activeLayout, fitView, setEdges, setNodes]);
-
-  useEffect(() => {
-    return () => {
-      if (loadingTimeoutRef.current !== null) {
-        window.clearTimeout(loadingTimeoutRef.current);
-      }
-    };
-  }, []);
+  }, [activeLayout, activeNodeIds, fitView, setEdges, setNodes]);
 
   const handleNavigate = useCallback(
     (nodeId: string) => {
@@ -132,15 +139,21 @@ const FlowContent = () => {
     },
     [fitView],
   );
+  const handleResetView = useCallback(() => {
+    fitView({
+      nodes: activeNodeIds,
+      duration: 800,
+      padding: FLOW_PADDING,
+    });
+  }, [activeNodeIds, fitView]);
 
   return (
     <>
       <CustomCursor />
-      <PortfolioNavbar onNavigate={handleNavigate} />
+      <PortfolioNavbar onNavigate={handleNavigate} onResetView={handleResetView} />
 
       <div className="relative h-screen w-screen overflow-hidden pt-[73px]">
         <DotBackground />
-        <LoadingScreen visible={showLoadingScreen} />
 
         <ReactFlow
           nodes={nodes}

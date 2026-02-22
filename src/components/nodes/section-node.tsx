@@ -19,7 +19,7 @@ type HandleGlowProps = {
   position: Position.Left | Position.Right;
 };
 
-const FLOAT_Y_KEYFRAMES = [0, -6, 0, 6, 0];
+const FLOAT_Y_KEYFRAMES = [0, -20, 0, 20, 0];
 const PULSE_INDICES = [0, 1, 2, 3, 4, 5] as const;
 
 const HandleGlowComponent = ({ isConnected, position }: HandleGlowProps) => {
@@ -61,7 +61,7 @@ const SectionNodeComponent = ({ id, data, description, icon: Icon, label, onClic
   const floatTransition = useMemo(
     () => ({
       y: {
-        duration: 6,
+        duration: 3,
         repeat: Infinity,
         ease: "easeInOut" as const,
         delay: data.floatDelay,
@@ -102,8 +102,6 @@ const SectionNodeComponent = ({ id, data, description, icon: Icon, label, onClic
         <>
           <Handle id="target-top" type="target" position={Position.Top} className="opacity-0" />
           <Handle id="source-bottom" type="source" position={Position.Bottom} className="opacity-0" />
-          <Handle id="target-left" type="target" position={Position.Left} className="opacity-0" />
-          <Handle id="source-right" type="source" position={Position.Right} className="opacity-0" />
         </>
       )}
       <HandleGlow isConnected={isLeftConnected} position={Position.Left} />
