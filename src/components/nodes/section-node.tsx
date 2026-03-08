@@ -6,6 +6,12 @@ import type { FlowNodeData } from "../../data/flow-layout-data";
 import { cn } from "../ui/utils";
 
 type SectionNodeProps = {
+  avatar?: {
+    alt: string;
+    height: number;
+    src: string;
+    width: number;
+  };
   id: string;
   data: FlowNodeData;
   description: string;
@@ -40,7 +46,15 @@ const HandleGlowComponent = ({ isConnected, position }: HandleGlowProps) => {
 
 const HandleGlow = memo(HandleGlowComponent);
 
-const SectionNodeComponent = ({ id, data, description, icon: Icon, label, onClick }: SectionNodeProps) => {
+const SectionNodeComponent = ({
+  avatar,
+  id,
+  data,
+  description,
+  icon: Icon,
+  label,
+  onClick,
+}: SectionNodeProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const leftConnections = useNodeConnections({ handleType: "target" });
   const rightConnections = useNodeConnections({ handleType: "source" });
@@ -120,9 +134,26 @@ const SectionNodeComponent = ({ id, data, description, icon: Icon, label, onClic
         <motion.div
           whileHover={{ scale: 1.1 }}
           transition={{ duration: 0.3 }}
-          className="relative flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/40 bg-gradient-to-br from-primary/30 to-primary/10 shadow-lg"
+          className={cn(
+            "relative flex h-20 w-20 items-center justify-center rounded-2xl border border-primary/40 shadow-lg",
+            avatar
+              ? "overflow-hidden bg-card p-0"
+              : "bg-gradient-to-br from-primary/30 to-primary/10",
+          )}
         >
-          <Icon className="h-10 w-10 text-primary drop-shadow-lg" />
+          {avatar ? (
+            <img
+              src={avatar.src}
+              alt={avatar.alt}
+              width={avatar.width}
+              height={avatar.height}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <Icon className="h-10 w-10 text-primary drop-shadow-lg" />
+          )}
 
           <AnimatePresence>
             {isHovered &&

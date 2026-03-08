@@ -1,19 +1,26 @@
-import { Mail, Linkedin, Github, MapPin, Phone } from "lucide-react";
+import { Mail, Linkedin, Github, Phone } from "lucide-react";
 import { motion } from "motion/react";
+import {
+  CONTACT_LINKS,
+  FLAT_TECH_STACK,
+  PROFILE_CONTENT,
+  PROFILE_IMAGE,
+} from "../../data/portfolio-content";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface ProfileDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
+
+const iconByContact = {
+  email: Mail,
+  phone: Phone,
+  linkedin: Linkedin,
+  github: Github,
+} as const;
 
 export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
   return (
@@ -27,7 +34,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
             Learn more about my background, skills, and how to connect with me.
           </DialogDescription>
         </DialogHeader>
-        
+
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -44,21 +51,23 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
             <motion.div
               whileHover={{ scale: 1.05, rotate: 5 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/10 border-2 border-primary/30 flex items-center justify-center flex-shrink-0 shadow-lg"
+              className="h-24 w-24 flex-shrink-0 overflow-hidden rounded-2xl border-2 border-primary/30 shadow-lg"
             >
-              <span className="text-3xl font-bold bg-gradient-to-br from-primary to-primary/70 bg-clip-text text-transparent">
-                MB
-              </span>
+              <img
+                src={PROFILE_IMAGE.dialog.src}
+                alt={PROFILE_IMAGE.dialog.alt}
+                width={PROFILE_IMAGE.dialog.width}
+                height={PROFILE_IMAGE.dialog.height}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover object-top"
+              />
             </motion.div>
             <div className="flex-1">
               <h2 className="text-2xl font-bold mb-2 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                Mutahhar Bin Muzaffar
+                {PROFILE_CONTENT.name}
               </h2>
-              <p className="text-lg text-muted-foreground mb-3">Frontend Engineer</p>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="w-4 h-4" />
-                Islamabad, Pakistan
-              </div>
+              <p className="text-lg text-muted-foreground">{PROFILE_CONTENT.title}</p>
             </div>
           </motion.div>
 
@@ -71,12 +80,7 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
             <h3 className="text-lg font-semibold mb-3 bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
               About
             </h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Accomplished frontend-focused engineer with 4+ years of experience building
-              scalable, high-performance, SEO-friendly web applications. I specialize in
-              JavaScript, React, and Next.js, and lead end-to-end product features using
-              Tailwind CSS, Radix UI, shadcn/ui, Redux, and Zustand.
-            </p>
+            <p className="text-muted-foreground leading-relaxed">{PROFILE_CONTENT.summary}</p>
           </motion.div>
 
           {/* Tech Stack */}
@@ -89,37 +93,16 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
               Technology Stack
             </h3>
             <div className="flex flex-wrap gap-2">
-              {[
-                "JavaScript",
-                "TypeScript",
-                "React",
-                "Next.js",
-                "HTML",
-                "CSS/SCSS",
-                "Tailwind CSS",
-                "shadcn/ui",
-                "Radix UI",
-                "Redux",
-                "Zustand",
-                "Node.js",
-                "Strapi CMS",
-                "Firebase",
-                "Socket.io",
-                "Docker",
-                "Kubernetes",
-                "Jest",
-                "Git",
-                "REST APIs",
-              ].map((tech, index) => (
+              {FLAT_TECH_STACK.map((tech) => (
                 <motion.div
                   key={tech}
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.4 + index * 0.03 }}
+                  transition={{ delay: 0.3 }}
                   whileHover={{ scale: 1.05, y: -2 }}
                 >
-                  <Badge 
-                    variant="outline" 
+                  <Badge
+                    variant="outline"
                     className="font-mono text-xs hover:border-primary/50 hover:bg-primary/5 transition-all cursor-default"
                   >
                     {tech}
@@ -139,54 +122,30 @@ export function ProfileDialog({ open, onOpenChange }: ProfileDialogProps) {
               Connect
             </h3>
             <div className="flex flex-wrap gap-3">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" asChild className="group relative overflow-hidden">
-                  <a
-                    href="mailto:mutahharbinmuzaffar@gmail.com"
-                    className="flex items-center gap-2"
+              {CONTACT_LINKS.map((contact) => {
+                const Icon = iconByContact[contact.id];
+                const isExternal = contact.id === "linkedin" || contact.id === "github";
+
+                return (
+                  <motion.div
+                    key={contact.id}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <Mail className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                    Email
-                  </a>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" asChild className="group relative overflow-hidden">
-                  <a
-                    href="tel:+923012498730"
-                    className="flex items-center gap-2"
-                  >
-                    <Phone className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                    Phone
-                  </a>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" asChild className="group relative overflow-hidden">
-                  <a
-                    href="https://www.linkedin.com/in/mutahhar-bin-muzaffar"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2"
-                  >
-                    <Linkedin className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                    LinkedIn
-                  </a>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button variant="outline" asChild className="group relative overflow-hidden">
-                  <a
-                    href="https://github.com/bmutahhar"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2"
-                  >
-                    <Github className="w-4 h-4 group-hover:rotate-12 transition-transform" />
-                    GitHub
-                  </a>
-                </Button>
-              </motion.div>
+                    <Button variant="outline" asChild className="group relative overflow-hidden">
+                      <a
+                        href={contact.href}
+                        target={isExternal ? "_blank" : undefined}
+                        rel={isExternal ? "noopener noreferrer" : undefined}
+                        className="flex items-center gap-2"
+                      >
+                        <Icon className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                        {contact.label}
+                      </a>
+                    </Button>
+                  </motion.div>
+                );
+              })}
             </div>
           </motion.div>
         </motion.div>

@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
+import { Award, Calendar, GraduationCap, MapPin } from "lucide-react";
+import { EDUCATION_CONTENT } from "../data/portfolio-content";
 import { Card, CardContent } from "./ui/card";
-import { GraduationCap, MapPin, Calendar, Award } from "lucide-react";
 
 export function EducationSection() {
   return (
@@ -35,36 +36,24 @@ export function EducationSection() {
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-xl font-medium mb-2">
-                    Bachelor of Computer Science
-                  </h3>
+                  <h3 className="text-xl font-medium mb-2">{EDUCATION_CONTENT.degree}</h3>
                   <p className="text-base text-foreground/90 mb-4">
-                    COMSATS University Islamabad
+                    {EDUCATION_CONTENT.institution}
                   </p>
 
-                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-6">
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                     <span className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      Graduated 2021
+                      Graduated {EDUCATION_CONTENT.graduationYear}
                     </span>
                     <span className="flex items-center gap-2">
                       <MapPin className="w-4 h-4" />
-                      Islamabad, Pakistan
+                      {EDUCATION_CONTENT.location}
                     </span>
                     <span className="flex items-center gap-2">
                       <Award className="w-4 h-4" />
-                      CGPA 3.73/4.0
+                      CGPA {EDUCATION_CONTENT.cgpa}
                     </span>
-                  </div>
-
-                  <div className="p-4 bg-muted/50 rounded-lg border border-border">
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Focused on software engineering, web development, and
-                      computer systems. Completed projects in full-stack
-                      development, data structures, algorithms, and distributed
-                      systems. Graduated with honors, demonstrating strong
-                      technical and problem-solving capabilities.
-                    </p>
                   </div>
                 </div>
               </div>

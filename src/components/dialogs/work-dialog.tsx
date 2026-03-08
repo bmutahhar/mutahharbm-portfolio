@@ -1,71 +1,15 @@
 import { motion } from "motion/react";
 import { useState } from "react";
+import { WORK_PROJECTS } from "../../data/portfolio-content";
 import { AnimatedDialogWrapper } from "../animated-dialog-components";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 
 interface WorkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const projects = [
-  {
-    title: "Workflows Canvas (ImagineArt - Vyro.ai)",
-    description:
-      "Led a unified React Flow canvas for text, image, and video generation, designing scalable architecture, node interactions, and real-time execution flows.",
-    impact: "Core platform feature delivery with scalable architecture and faster execution workflows",
-    tech: ["React", "React Flow", "TypeScript", "Zustand", "Next.js", "Tailwind CSS"],
-    highlights: [
-      "Designed and implemented complex node/state architecture for production-scale workflows",
-      "Integrated text, image, and video experiences into a single interaction model",
-      "Built reusable UI and interaction patterns for faster team delivery",
-    ],
-  },
-  {
-    title: "Subscription Feature Gating",
-    description:
-      "Implemented subscription-based feature gating powered by Firebase Remote Config to enable real-time rollouts across product surfaces.",
-    impact: "60% rollout efficiency improvement, 35% lower access-update overhead, 20% subscription growth contribution",
-    tech: ["Firebase Remote Config", "React", "Next.js", "TypeScript"],
-    highlights: [
-      "Implemented controlled rollout logic for subscription tiers",
-      "Reduced manual access operations and improved release reliability",
-      "Enabled faster experimentation and safer progressive releases",
-    ],
-  },
-  {
-    title: "Healthcare Provider Dashboard (DevsInc)",
-    description:
-      "Built a healthcare dashboard with calendar workflows and Twilio-powered video interactions, then improved UX and performance across key journeys.",
-    impact: "40% faster load time, 20% faster feature releases, 30% fewer support tickets",
-    tech: ["React", "TypeScript", "Material UI", "Twilio", "Node.js"],
-    highlights: [
-      "Developed calendar and provider interaction workflows",
-      "Improved data flow and query behavior for faster dashboard responsiveness",
-      "Resolved 50+ production issues with measurable UX improvements",
-    ],
-  },
-  {
-    title: "eCommerce + Ops Platforms (Engiselle)",
-    description:
-      "Delivered eCommerce features (including online pharmacy and home-repair products), plus event and support workflows across the platform.",
-    impact: "20% higher transaction volume and 35% higher engagement",
-    tech: ["React", "Node.js", "Socket.io", "REST APIs"],
-    highlights: [
-      "Implemented real-time event notifications with Socket.io",
-      "Added image annotation and ANPR webhook workflows",
-      "Improved support-case accuracy and resolution speed",
-    ],
-  },
-];
 
 export function WorkDialog({ open, onOpenChange }: WorkDialogProps) {
   const [selectedProject, setSelectedProject] = useState<number | null>(null);
@@ -81,12 +25,12 @@ export function WorkDialog({ open, onOpenChange }: WorkDialogProps) {
             Featured projects showcasing technical expertise and measurable impact.
           </DialogDescription>
         </DialogHeader>
-        
+
         <AnimatedDialogWrapper>
           <div className="space-y-4">
-            {projects.map((project, index) => (
+            {WORK_PROJECTS.map((project, index) => (
               <motion.div
-                key={index}
+                key={project.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
@@ -97,6 +41,9 @@ export function WorkDialog({ open, onOpenChange }: WorkDialogProps) {
                   {/* Header */}
                   <div>
                     <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
+                    <p className="text-xs text-muted-foreground font-mono mb-2">
+                      {project.company}
+                    </p>
                     <p className="text-sm text-muted-foreground leading-relaxed">
                       {project.description}
                     </p>
@@ -110,7 +57,7 @@ export function WorkDialog({ open, onOpenChange }: WorkDialogProps) {
                         <div className="text-xs uppercase tracking-wider text-primary font-medium mb-1">
                           Impact
                         </div>
-                        <div className="text-sm text-foreground">{project.impact}</div>
+                        <div className="text-sm text-foreground">{project.outcome}</div>
                       </div>
                     </div>
                   </div>
@@ -153,11 +100,7 @@ export function WorkDialog({ open, onOpenChange }: WorkDialogProps) {
                       </Button>
                     </div>
                   ) : (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setSelectedProject(index)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setSelectedProject(index)}>
                       View Details
                     </Button>
                   )}

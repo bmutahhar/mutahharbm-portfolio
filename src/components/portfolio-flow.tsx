@@ -8,6 +8,7 @@ import {
   useEdgesState,
   useNodesState,
   useReactFlow,
+  useViewport,
 } from "@xyflow/react";
 import {
   desktopEdges,
@@ -34,6 +35,10 @@ import { PortfolioNavbar } from "./portfolio-navbar";
 const FLOW_PADDING = 0.24;
 const DESKTOP_MIN_WIDTH = 1024;
 const TABLET_MIN_WIDTH = 768;
+const NAVBAR_HEIGHT = 73;
+const CANVAS_MULTIPLIER = 3;
+const FALLBACK_NODE_WIDTH = 200;
+const FALLBACK_NODE_HEIGHT = 200;
 
 const nodeTypes = {
   "profile-node": ProfileNode,
@@ -60,6 +65,11 @@ const cloneNodes = (nodes: Array<Node<FlowNodeData>>) =>
 const cloneEdges = (edges: Array<Edge>) => edges.map((edge) => ({ ...edge }));
 
 type ViewportMode = "desktop" | "tablet" | "mobile";
+type FlowExtent = [[number, number], [number, number]];
+type ViewportSize = {
+  width: number;
+  height: number;
+};
 
 const getViewportMode = (): ViewportMode => {
   if (typeof window === "undefined") {
@@ -77,10 +87,72 @@ const getViewportMode = (): ViewportMode => {
   return "mobile";
 };
 
+const getViewportSize = (): ViewportSize => {
+  if (typeof window === "undefined") {
+    return { width: DESKTOP_MIN_WIDTH, height: 900 - NAVBAR_HEIGHT };
+  }
+
+  return {
+    width: window.innerWidth,
+    height: Math.max(window.innerHeight - NAVBAR_HEIGHT, 0),
+  };
+};
+
+const getFlowExtent = (
+  layoutNodes: Array<Node<FlowNodeData>>,
+  viewportSize: ViewportSize,
+  zoom: number,
+): FlowExtent => {
+  const safeZoom = Math.max(zoom, 0.01);
+  const visibleFlowWidth = viewportSize.width / safeZoom;
+  const visibleFlowHeight = viewportSize.height / safeZoom;
+
+  if (layoutNodes.length === 0) {
+    return [
+      [0, 0],
+      [visibleFlowWidth * CANVAS_MULTIPLIER, visibleFlowHeight * CANVAS_MULTIPLIER],
+    ];
+  }
+
+  const bounds = layoutNodes.reduce(
+    (acc, node) => {
+      const nodeWidth = node.measured?.width ?? node.width ?? FALLBACK_NODE_WIDTH;
+      const nodeHeight = node.measured?.height ?? node.height ?? FALLBACK_NODE_HEIGHT;
+
+      return {
+        minX: Math.min(acc.minX, node.position.x),
+        minY: Math.min(acc.minY, node.position.y),
+        maxX: Math.max(acc.maxX, node.position.x + nodeWidth),
+        maxY: Math.max(acc.maxY, node.position.y + nodeHeight),
+      };
+    },
+    {
+      minX: Number.POSITIVE_INFINITY,
+      minY: Number.POSITIVE_INFINITY,
+      maxX: Number.NEGATIVE_INFINITY,
+      maxY: Number.NEGATIVE_INFINITY,
+    },
+  );
+
+  const contentWidth = bounds.maxX - bounds.minX;
+  const contentHeight = bounds.maxY - bounds.minY;
+  const boundedWidth = Math.max(contentWidth, visibleFlowWidth * CANVAS_MULTIPLIER);
+  const boundedHeight = Math.max(contentHeight, visibleFlowHeight * CANVAS_MULTIPLIER);
+  const centerX = (bounds.minX + bounds.maxX) / 2;
+  const centerY = (bounds.minY + bounds.maxY) / 2;
+
+  return [
+    [centerX - boundedWidth / 2, centerY - boundedHeight / 2],
+    [centerX + boundedWidth / 2, centerY + boundedHeight / 2],
+  ];
+};
+
 const FlowContent = () => {
   const [viewportMode, setViewportMode] = useState<ViewportMode>(getViewportMode);
+  const [viewportSize, setViewportSize] = useState<ViewportSize>(getViewportSize);
 
   const { fitView } = useReactFlow();
+  const { zoom } = useViewport();
   const [nodes, setNodes, onNodesChange] = useNodesState(cloneNodes(desktopNodes));
   const [edges, setEdges, onEdgesChange] = useEdgesState(cloneEdges(desktopEdges));
 
@@ -92,7 +164,12 @@ const FlowContent = () => {
           : viewportMode === "tablet"
             ? tabletNodes
             : mobileNodes,
-      edges: viewportMode === "desktop" ? desktopEdges : viewportMode === "tablet" ? tabletEdges : mobileEdges,
+      edges:
+        viewportMode === "desktop"
+          ? desktopEdges
+          : viewportMode === "tablet"
+            ? tabletEdges
+            : mobileEdges,
     }),
     [viewportMode],
   );
@@ -100,10 +177,15 @@ const FlowContent = () => {
     () => activeLayout.nodes.map((node) => ({ id: node.id })),
     [activeLayout.nodes],
   );
+  const flowExtent = useMemo(
+    () => getFlowExtent(activeLayout.nodes, viewportSize, zoom),
+    [activeLayout.nodes, viewportSize, zoom],
+  );
 
   useEffect(() => {
     const handleResize = () => {
       setViewportMode(getViewportMode());
+      setViewportSize(getViewportSize());
     };
 
     window.addEventListener("resize", handleResize);
@@ -168,6 +250,8 @@ const FlowContent = () => {
           attributionPosition="bottom-right"
           proOptions={{ hideAttribution: true }}
           className="relative z-[2]"
+          translateExtent={flowExtent}
+          nodeExtent={flowExtent}
           nodesDraggable={true}
           nodesConnectable={false}
           panOnDrag={[0, 1, 2]}

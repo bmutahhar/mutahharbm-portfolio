@@ -25,6 +25,18 @@ import {
   Zap,
   Layers,
 } from "lucide-react";
+import { CONTACT_LINKS, PROFILE_CONTENT, SKILL_CATEGORIES } from "../data/portfolio-content";
+
+const frontendSkills =
+  SKILL_CATEGORIES.find((category) => category.category === "Frontend")?.skills ?? [];
+const backendSkills =
+  SKILL_CATEGORIES.find((category) => category.category === "Backend/Infra")?.skills ?? [];
+const testingSkills =
+  SKILL_CATEGORIES.find((category) => category.category === "Testing/Tools")?.skills ?? [];
+
+const heroSocialLinks = CONTACT_LINKS.filter(
+  (contact) => contact.id === "email" || contact.id === "linkedin" || contact.id === "github",
+);
 
 // Profile Header Node
 function ProfileNode() {
@@ -36,19 +48,13 @@ function ProfileNode() {
         </div>
         <div>
           <p className="text-xs uppercase tracking-wider text-muted-foreground mb-2 font-mono">
-            Frontend Engineer
+            {PROFILE_CONTENT.title}
           </p>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
-            Mutahhar Bin Muzaffar
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Islamabad, Pakistan
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight mb-2">{PROFILE_CONTENT.name}</h1>
         </div>
       </div>
       <p className="text-sm text-muted-foreground leading-relaxed">
-        Building fast, scalable web apps with React and Next.js, focused on
-        performance, SEO, and polished UX.
+        {PROFILE_CONTENT.shortSummary}
       </p>
     </div>
   );
@@ -98,37 +104,26 @@ function SocialNode() {
         <h3 className="font-semibold text-lg">Connect</h3>
       </div>
       <div className="space-y-3">
-        <a
-          href="mailto:mutahharbinmuzaffar@gmail.com"
-          className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors group"
-        >
-          <div className="w-8 h-8 rounded-lg bg-muted group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-            <Mail className="w-4 h-4" />
-          </div>
-          <span>mutahharbinmuzaffar@gmail.com</span>
-        </a>
-        <a
-          href="https://www.linkedin.com/in/mutahhar-bin-muzaffar"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors group"
-        >
-          <div className="w-8 h-8 rounded-lg bg-muted group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-            <Linkedin className="w-4 h-4" />
-          </div>
-          <span>LinkedIn Profile</span>
-        </a>
-        <a
-          href="https://github.com/bmutahhar"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors group"
-        >
-          <div className="w-8 h-8 rounded-lg bg-muted group-hover:bg-primary/10 flex items-center justify-center transition-colors">
-            <Github className="w-4 h-4" />
-          </div>
-          <span>GitHub Profile</span>
-        </a>
+        {heroSocialLinks.map((contact) => {
+          const Icon =
+            contact.id === "email" ? Mail : contact.id === "linkedin" ? Linkedin : Github;
+          const isExternal = contact.id !== "email";
+
+          return (
+            <a
+              key={contact.id}
+              href={contact.href}
+              target={isExternal ? "_blank" : undefined}
+              rel={isExternal ? "noopener noreferrer" : undefined}
+              className="flex items-center gap-3 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-muted group-hover:bg-primary/10 flex items-center justify-center transition-colors">
+                <Icon className="w-4 h-4" />
+              </div>
+              <span>{contact.value}</span>
+            </a>
+          );
+        })}
       </div>
     </div>
   );
@@ -185,23 +180,24 @@ function SpecializationNode() {
         <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
           <Zap className="w-5 h-5 text-primary" />
         </div>
-        <h3 className="font-semibold text-lg">React Flow Expert</h3>
+        <h3 className="font-semibold text-lg">Workflow Systems</h3>
       </div>
       <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-        Specialized in building complex workflow visualizations, node-based editors, and interactive diagrams.
+        Led a unified React Flow workflow canvas for text, image, and video generation with
+        real-time execution.
       </p>
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <div className="w-1.5 h-1.5 rounded-full bg-chart-2" />
-          Custom Node Types
+          Unified Workflows
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <div className="w-1.5 h-1.5 rounded-full bg-chart-3" />
-          Dynamic Layouts
+          React Flow
         </div>
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <div className="w-1.5 h-1.5 rounded-full bg-chart-4" />
-          Interactive Workflows
+          Real-time Execution
         </div>
       </div>
     </div>
@@ -248,7 +244,7 @@ const initialNodes: Node[] = [
     position: { x: 50, y: 500 },
     data: {
       title: "Frontend",
-      items: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+      items: PROFILE_CONTENT.focusStack,
     },
   },
   {
@@ -257,7 +253,7 @@ const initialNodes: Node[] = [
     position: { x: 380, y: 500 },
     data: {
       title: "Backend",
-      items: ["Node.js", "PostgreSQL", "MongoDB", "REST & GraphQL"],
+      items: backendSkills.slice(0, 4),
     },
   },
   {
@@ -265,16 +261,7 @@ const initialNodes: Node[] = [
     type: "techStack",
     position: { x: 710, y: 280 },
     data: {
-      techs: [
-        "shadcn/ui",
-        "Radix UI",
-        "Zustand",
-        "Redux",
-        "React Hook Form",
-        "Docker",
-        "Kubernetes",
-        "Socket.io",
-      ],
+      techs: [...frontendSkills.slice(3), ...testingSkills, ...backendSkills.slice(4)],
     },
   },
 ];
@@ -352,7 +339,7 @@ export function HeroSection() {
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    [setEdges],
   );
 
   return (

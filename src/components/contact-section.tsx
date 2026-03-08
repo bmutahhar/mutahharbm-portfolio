@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion } from "motion/react";
+import { CONTACT_LINKS } from "../data/portfolio-content";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -22,32 +23,12 @@ export function ContactSection() {
     setFormData({ name: "", email: "", message: "" });
   };
 
-  const contactCards = [
-    {
-      icon: Mail,
-      label: "Email",
-      value: "mutahharbinmuzaffar@gmail.com",
-      href: "mailto:mutahharbinmuzaffar@gmail.com",
-    },
-    {
-      icon: Phone,
-      label: "Phone",
-      value: "+92 301 2498730",
-      href: "tel:+923012498730",
-    },
-    {
-      icon: Linkedin,
-      label: "LinkedIn",
-      value: "in/mutahhar-bin-muzaffar",
-      href: "https://www.linkedin.com/in/mutahhar-bin-muzaffar",
-    },
-    {
-      icon: Github,
-      label: "GitHub",
-      value: "github.com/bmutahhar",
-      href: "https://github.com/bmutahhar",
-    },
-  ];
+  const iconByContact = {
+    email: Mail,
+    phone: Phone,
+    linkedin: Linkedin,
+    github: Github,
+  } as const;
 
   return (
     <section id="contact" className="py-20 px-6 md:px-12">
@@ -62,13 +43,10 @@ export function ContactSection() {
           <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3 font-mono">
             Get In Touch
           </p>
-          <h2 className="text-3xl md:text-4xl tracking-tight mb-4">
-            Let's Build Something Great
-          </h2>
+          <h2 className="text-3xl md:text-4xl tracking-tight mb-4">Let's Build Something Great</h2>
           <p className="text-base text-muted-foreground max-w-2xl mx-auto">
-            I'm currently open to new opportunities and interesting projects.
-            Whether you have a question or just want to say hi, feel free to
-            reach out!
+            Whether you have a question, want to discuss a project, or simply want to connect, feel
+            free to reach out.
           </p>
         </motion.div>
 
@@ -82,66 +60,45 @@ export function ContactSection() {
             className="space-y-6"
           >
             <div>
-              <h3 className="text-lg font-medium mb-4">
-                Availability & Preferences
-              </h3>
+              <h3 className="text-lg font-medium mb-4">Contact Details</h3>
               <p className="text-sm text-muted-foreground leading-relaxed mb-6">
-                I'm available for full-time positions, contract work, and
-                freelance projects. I specialize in frontend development with
-                React and Next.js, but I'm also comfortable working across the
-                full stack.
+                Reach out directly using the resume-backed contact details below, or send a message
+                through the form.
               </p>
-              <div className="p-4 bg-muted/50 rounded-lg border border-border">
-                <p className="text-sm">
-                  <span className="font-medium">Location:</span> Islamabad,
-                  Pakistan
-                </p>
-                <p className="text-sm mt-2">
-                  <span className="font-medium">Work Preference:</span> Remote,
-                  Hybrid, or On-site
-                </p>
-              </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
-              {contactCards.map((contact, index) => (
-                <motion.a
-                  key={contact.label}
-                  href={contact.href}
-                  target={
-                    contact.label === "LinkedIn" || contact.label === "GitHub"
-                      ? "_blank"
-                      : undefined
-                  }
-                  rel={
-                    contact.label === "LinkedIn" || contact.label === "GitHub"
-                      ? "noopener noreferrer"
-                      : undefined
-                  }
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                >
-                  <Card className="group hover:shadow-md transition-all duration-300 cursor-pointer">
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 group-hover:bg-foreground/10 transition-colors">
-                          <contact.icon className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+              {CONTACT_LINKS.map((contact, index) => {
+                const Icon = iconByContact[contact.id];
+                const isExternal = contact.id === "linkedin" || contact.id === "github";
+
+                return (
+                  <motion.a
+                    key={contact.id}
+                    href={contact.href}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                  >
+                    <Card className="group hover:shadow-md transition-all duration-300 cursor-pointer">
+                      <CardContent className="p-4">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 group-hover:bg-foreground/10 transition-colors">
+                            <Icon className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs text-muted-foreground mb-1">{contact.label}</p>
+                            <p className="text-sm font-medium truncate">{contact.value}</p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs text-muted-foreground mb-1">
-                            {contact.label}
-                          </p>
-                          <p className="text-sm font-medium truncate">
-                            {contact.value}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.a>
-              ))}
+                      </CardContent>
+                    </Card>
+                  </motion.a>
+                );
+              })}
             </div>
           </motion.div>
 
@@ -161,9 +118,7 @@ export function ContactSection() {
                       id="name"
                       placeholder="Your name"
                       value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       required
                     />
                   </div>
@@ -175,9 +130,7 @@ export function ContactSection() {
                       type="email"
                       placeholder="your.email@example.com"
                       value={formData.email}
-                      onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       required
                     />
                   </div>
@@ -189,9 +142,7 @@ export function ContactSection() {
                       placeholder="Tell me about your project or just say hi..."
                       rows={6}
                       value={formData.message}
-                      onChange={(e) =>
-                        setFormData({ ...formData, message: e.target.value })
-                      }
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
                     />
                   </div>

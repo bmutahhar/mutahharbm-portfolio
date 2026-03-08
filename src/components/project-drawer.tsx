@@ -1,21 +1,10 @@
 import { motion } from "motion/react";
 import { X } from "lucide-react";
+import type { ProjectContent } from "../data/portfolio-content";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 
-export interface Project {
-  id: string;
-  title: string;
-  company: string;
-  outcome: string;
-  description: string;
-  problem: string;
-  solution: string;
-  whatIBuilt: string;
-  tech: string[];
-  roles: string[];
-  metrics: Array<{ label: string; value: string }>;
-}
+export type Project = ProjectContent;
 
 interface ProjectDrawerProps {
   project: Project | null;
@@ -68,9 +57,7 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
             <h3 className="text-sm font-medium mb-3 uppercase tracking-wider text-muted-foreground">
               Problem
             </h3>
-            <p className="text-base leading-relaxed text-muted-foreground">
-              {project.problem}
-            </p>
+            <p className="text-base leading-relaxed text-muted-foreground">{project.problem}</p>
           </div>
 
           {/* Solution */}
@@ -78,9 +65,7 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
             <h3 className="text-sm font-medium mb-3 uppercase tracking-wider text-muted-foreground">
               Solution
             </h3>
-            <p className="text-base leading-relaxed text-muted-foreground">
-              {project.solution}
-            </p>
+            <p className="text-base leading-relaxed text-muted-foreground">{project.solution}</p>
           </div>
 
           {/* What I Built */}
@@ -88,9 +73,7 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
             <h3 className="text-sm font-medium mb-3 uppercase tracking-wider text-muted-foreground">
               What I Built
             </h3>
-            <p className="text-base leading-relaxed text-muted-foreground">
-              {project.whatIBuilt}
-            </p>
+            <p className="text-base leading-relaxed text-muted-foreground">{project.whatIBuilt}</p>
           </div>
 
           {/* Roles */}
@@ -128,16 +111,9 @@ export function ProjectDrawer({ project, onClose }: ProjectDrawerProps) {
             </h3>
             <div className="grid gap-4">
               {project.metrics.map((metric, i) => (
-                <div
-                  key={i}
-                  className="p-4 bg-muted/50 rounded-lg border border-border"
-                >
-                  <div className="text-2xl font-medium tracking-tight mb-1">
-                    {metric.value}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    {metric.label}
-                  </div>
+                <div key={i} className="p-4 bg-muted/50 rounded-lg border border-border">
+                  <div className="text-2xl font-medium tracking-tight mb-1">{metric.value}</div>
+                  <div className="text-sm text-muted-foreground">{metric.label}</div>
                 </div>
               ))}
             </div>

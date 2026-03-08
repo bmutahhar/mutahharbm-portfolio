@@ -1,4 +1,5 @@
 import { Mail, Linkedin, Github } from "lucide-react";
+import { PROFILE_CONTENT } from "../data/portfolio-content";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -9,12 +10,8 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Left: Name & Role */}
           <div className="text-center md:text-left">
-            <h3 className="text-sm font-medium mb-1">
-              Mutahhar Bin Muzaffar
-            </h3>
-            <p className="text-xs text-muted-foreground">
-              Frontend Engineer • Islamabad, Pakistan
-            </p>
+            <h3 className="text-sm font-medium mb-1">{PROFILE_CONTENT.name}</h3>
+            <p className="text-xs text-muted-foreground">{PROFILE_CONTENT.title}</p>
           </div>
 
           {/* Center: Social Links */}

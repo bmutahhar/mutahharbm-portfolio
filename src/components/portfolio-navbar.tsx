@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useCallback } from "react";
 import { useTheme } from "next-themes";
+import { PROFILE_CONTENT } from "../data/portfolio-content";
 import { BrandLogo } from "./navbar/brand-logo";
 import { DesktopNavbar } from "./navbar/desktop-navbar";
 import { MobileNavbar } from "./navbar/mobile-navbar";
@@ -47,9 +48,9 @@ export const PortfolioNavbar = ({ onNavigate, onResetView }: PortfolioNavbarProp
             <BrandLogo />
             <div>
               <h1 className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-sm font-semibold text-transparent">
-                Mutahhar Bin Muzaffar
+                {PROFILE_CONTENT.name}
               </h1>
-              <p className="text-xs text-muted-foreground">Frontend Engineer</p>
+              <p className="text-xs text-muted-foreground">{PROFILE_CONTENT.title}</p>
             </div>
           </motion.button>
 
