@@ -52,8 +52,6 @@ Set these environment variables:
 - `RESEND_FROM_EMAIL` - sender email (for example `Portfolio <hello@yourdomain.com>`)
 - `CONTACT_TO_EMAIL` - destination inbox where contact messages are received
 
-If `RESEND_FROM_EMAIL` is not provided, the app falls back to `onboarding@resend.dev`.
-
 ## Project Structure
 
 - `src/app` - Next.js app router files (`layout`, `page`, global styles)

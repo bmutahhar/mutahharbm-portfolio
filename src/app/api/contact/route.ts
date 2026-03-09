@@ -15,7 +15,7 @@ const escapeHtml = (value: string) =>
 
 export async function POST(request: Request) {
   const resendApiKey = env.RESEND_API_KEY;
-  const fromEmail = env.RESEND_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>";
+  const fromEmail = env.RESEND_FROM_EMAIL;
   const toEmail = env.CONTACT_TO_EMAIL;
 
   if (!resendApiKey || !toEmail) {

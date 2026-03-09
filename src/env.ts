@@ -21,14 +21,27 @@ const urlOrDomainSchema = z
 
 const emailSenderSchema = z
   .string()
-  .min(1, "Sender email cannot be empty.")
-  .refine((value) => value.includes("@"), "Sender must include an email address.");
+  .min(1, "RESEND_FROM_EMAIL cannot be empty.")
+  .refine((value) => {
+    const trimmed = value.trim();
+
+    if (trimmed.includes("<") && trimmed.includes(">")) {
+      const bracketMatch = trimmed.match(/<([^<>]+)>/);
+      if (!bracketMatch) {
+        return false;
+      }
+
+      return z.string().email().safeParse(bracketMatch[1].trim()).success;
+    }
+
+    return z.string().email().safeParse(trimmed).success;
+  }, "RESEND_FROM_EMAIL must be a valid sender like contact@domain.com or Name <contact@domain.com>.");
 
 export const env = createEnv({
   server: {
-    RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY cannot be empty.").optional(),
-    RESEND_FROM_EMAIL: emailSenderSchema.optional(),
-    CONTACT_TO_EMAIL: z.string().email("CONTACT_TO_EMAIL must be a valid email.").optional(),
+    RESEND_API_KEY: z.string().min(1, "RESEND_API_KEY cannot be empty."),
+    RESEND_FROM_EMAIL: emailSenderSchema,
+    CONTACT_TO_EMAIL: z.string().email("CONTACT_TO_EMAIL must be a valid email."),
     SITE_URL: urlOrDomainSchema.optional(),
     VERCEL_PROJECT_PRODUCTION_URL: urlOrDomainSchema.optional(),
     VERCEL_URL: urlOrDomainSchema.optional(),
