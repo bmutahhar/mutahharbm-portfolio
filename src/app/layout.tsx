@@ -48,10 +48,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/icon-512.png",
-        width: 512,
-        height: 512,
-        alt: `${PROFILE_CONTENT.name} portfolio icon`,
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${PROFILE_CONTENT.name} - Frontend Engineer & React Flow Expert`,
       },
     ],
   },
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: `${PROFILE_CONTENT.name} | Frontend Engineer & React Flow Expert`,
     description:
       "Frontend Engineer and Frontend Developer portfolio with deep React Flow expertise.",
-    images: ["/icon-512.png"],
+    images: ["/opengraph-image"],
   },
   icons: {
     icon: [

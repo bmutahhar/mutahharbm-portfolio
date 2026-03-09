@@ -24,6 +24,11 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitState, setSubmitState] = useState<{
+    message: string;
+    status: "error" | "success";
+  } | null>(null);
   const directContacts = CONTACT_LINKS.filter(
     (contact) => contact.id === "email" || contact.id === "phone",
   );
@@ -31,12 +36,46 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
     (contact) => contact.id === "linkedin" || contact.id === "github",
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would send the form data to a backend
-    console.log("Form submitted:", formData);
-    alert("Thank you for your message! I'll get back to you soon.");
-    setFormData({ name: "", email: "", message: "" });
+    if (isSubmitting) {
+      return;
+    }
+
+    setSubmitState(null);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const body = (await response.json().catch(() => null)) as { error?: string } | null;
+
+      if (!response.ok) {
+        setSubmitState({
+          status: "error",
+          message: body?.error ?? "Something went wrong. Please try again.",
+        });
+        return;
+      }
+
+      setSubmitState({
+        status: "success",
+        message: "Thanks for reaching out. Your message has been sent successfully.",
+      });
+      setFormData({ name: "", email: "", message: "" });
+    } catch {
+      setSubmitState({
+        status: "error",
+        message: "Network error while sending message. Please try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -118,6 +157,7 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   className="h-11"
+                  disabled={isSubmitting}
                   required
                 />
               </div>
@@ -132,6 +172,7 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="h-11"
+                  disabled={isSubmitting}
                   required
                 />
               </div>
@@ -146,13 +187,24 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   className="h-40"
+                  disabled={isSubmitting}
                   required
                 />
               </div>
-              <Button type="submit" className="mt-1 w-full" size="lg">
+              <Button type="submit" className="mt-1 w-full" size="lg" disabled={isSubmitting}>
                 <Send className="w-4 h-4 mr-2" />
-                Send Message
+                {isSubmitting ? "Sending..." : "Send Message"}
               </Button>
+              {submitState ? (
+                <p
+                  aria-live="polite"
+                  className={`text-sm ${
+                    submitState.status === "success" ? "text-primary" : "text-destructive"
+                  }`}
+                >
+                  {submitState.message}
+                </p>
+              ) : null}
             </form>
           </section>
         </div>

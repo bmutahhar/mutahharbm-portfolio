@@ -42,6 +42,18 @@ Interactive portfolio built with Next.js App Router and React Flow.
 - `pnpm lint` - run ESLint (no warnings allowed)
 - `pnpm lint:fix` - auto-fix lint issues
 
+## Contact Form (Resend)
+
+The "Get In Touch" dialog sends messages through a server route backed by Resend.
+
+Set these environment variables:
+
+- `RESEND_API_KEY` - your Resend API key
+- `RESEND_FROM_EMAIL` - sender email (for example `Portfolio <hello@yourdomain.com>`)
+- `CONTACT_TO_EMAIL` - destination inbox where contact messages are received
+
+If `RESEND_FROM_EMAIL` is not provided, the app falls back to `onboarding@resend.dev`.
+
 ## Project Structure
 
 - `src/app` - Next.js app router files (`layout`, `page`, global styles)
