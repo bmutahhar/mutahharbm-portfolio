@@ -18,40 +18,34 @@ export default function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          position: "relative",
-          background: "#0a0c0a",
+          flexDirection: "column",
+          justifyContent: "center",
+          background:
+            "radial-gradient(circle at 12% 18%, rgba(110,158,117,0.35), rgba(10,12,10,0) 38%), radial-gradient(circle at 88% 80%, rgba(110,158,117,0.22), rgba(10,12,10,0) 42%), linear-gradient(120deg, #0a0c0a 0%, #0d140f 50%, #0a0c0a 100%)",
           color: "#f1f5f2",
           fontFamily: "Inter, system-ui, sans-serif",
+          boxSizing: "border-box",
           overflow: "hidden",
         }}
       >
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(circle at 16% 22%, rgba(110,158,117,0.35), rgba(10,12,10,0) 38%), radial-gradient(circle at 82% 78%, rgba(110,158,117,0.22), rgba(10,12,10,0) 42%)",
-          }}
-        />
-
-        <div
-          style={{
-            position: "absolute",
-            inset: 32,
+            width: "100%",
+            height: "100%",
             borderRadius: 28,
             border: "1px solid rgba(110,158,117,0.35)",
             background:
-              "linear-gradient(120deg, rgba(110,158,117,0.12), rgba(110,158,117,0.02) 40%, rgba(110,158,117,0.1))",
+              "linear-gradient(120deg, rgba(110,158,117,0.14), rgba(110,158,117,0.04) 40%, rgba(110,158,117,0.12))",
             display: "flex",
+            alignItems: "center",
           }}
         >
           <div
             style={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
               gap: 24,
-              padding: "68px 76px",
+              padding: "76px",
               width: "100%",
             }}
           >
@@ -77,10 +71,10 @@ export default function OpenGraphImage() {
               <div
                 style={{
                   display: "flex",
-                  fontSize: 72,
+                  fontSize: 78,
                   lineHeight: 1.05,
                   fontWeight: 800,
-                  maxWidth: 960,
+                  maxWidth: 1020,
                 }}
               >
                 {NAME}
