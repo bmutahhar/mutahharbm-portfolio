@@ -229,6 +229,7 @@ const FlowContent = () => {
       padding: FLOW_PADDING,
     });
   }, [activeNodeIds, fitView]);
+  const preventDelete = useCallback(async () => false, []);
 
   const hasVisibleNodes = useMemo(() => {
     const safeZoom = Math.max(zoom, 0.01);
@@ -282,6 +283,8 @@ const FlowContent = () => {
           className="relative z-[2]"
           translateExtent={flowExtent}
           nodeExtent={flowExtent}
+          deleteKeyCode={null}
+          onBeforeDelete={preventDelete}
           nodesDraggable={true}
           nodesConnectable={false}
           panOnDrag={[0, 1, 2]}
