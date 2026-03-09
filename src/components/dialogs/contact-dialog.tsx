@@ -136,7 +136,7 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
               </div>
             </section>
 
-            <section className="mt-auto rounded-2xl border border-primary/20 bg-primary/5 p-5">
+            <section className="rounded-2xl border border-primary/20 bg-primary/5 p-5">
               <p className="text-sm text-muted-foreground">
                 Prefer a quick response? Email is the fastest way to reach me.
               </p>
