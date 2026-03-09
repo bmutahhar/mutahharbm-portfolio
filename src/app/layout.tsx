@@ -7,9 +7,9 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: `${PROFILE_CONTENT.name} | Frontend Engineer & React Flow Expert`,
+  title: `${PROFILE_CONTENT.shortName} | Frontend Engineer & React Flow Expert`,
   description:
-    "Mutahhar Bin Muzaffar is a Frontend Engineer and Frontend Developer specializing in React, Next.js, and complex React Flow systems.",
+    "Explore the portfolio of Mutahhar Bin Muzaffar, a Frontend Engineer building React, Next.js, and React Flow products with measurable business results.",
   keywords: [
     "Mutahhar Bin Muzaffar",
     "Frontend Engineer",
@@ -39,9 +39,9 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `${PROFILE_CONTENT.name} | Frontend Engineer & React Flow Expert`,
+    title: `${PROFILE_CONTENT.shortName} | Frontend Engineer & React Flow Expert`,
     description:
-      "Frontend Engineer and Frontend Developer portfolio focused on React, Next.js, and React Flow architecture.",
+      "Explore the portfolio of Mutahhar Bin Muzaffar, a Frontend Engineer building React, Next.js, and React Flow products with measurable business results.",
     url: siteUrl,
     siteName: `${PROFILE_CONTENT.name} Portfolio`,
     locale: "en_US",
@@ -57,9 +57,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PROFILE_CONTENT.name} | Frontend Engineer & React Flow Expert`,
+    title: `${PROFILE_CONTENT.shortName} | Frontend Engineer & React Flow Expert`,
     description:
-      "Frontend Engineer and Frontend Developer portfolio with deep React Flow expertise.",
+      "Explore the portfolio of Mutahhar Bin Muzaffar, a Frontend Engineer building React, Next.js, and React Flow products with measurable business results.",
     images: ["/opengraph-image"],
   },
   icons: {

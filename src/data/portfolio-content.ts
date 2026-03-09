@@ -9,6 +9,7 @@ export type ContactLink = {
 
 export type ProfileContent = {
   name: string;
+  shortName: string;
   title: string;
   summary: string;
   shortSummary: string;
@@ -79,6 +80,7 @@ export type ImpactMetric = {
 
 export const PROFILE_CONTENT: ProfileContent = {
   name: "Mutahhar Bin Muzaffar",
+  shortName: "Mutahhar BM",
   title: "Full Stack Engineer (Frontend-Leaning)",
   summary:
     "Accomplished full-stack, frontend-leaning engineer with 4+ years of experience, specializing in JavaScript, React, and Next.js, building scalable, high performance, SEO friendly web apps. Alongside strong frontend ownership, I also build backend services and delivery workflows using Node.js, Express.js, Nest.js, Clerk, Auth.js, AWS EC2, GitHub Actions, and CI/CD practices.",

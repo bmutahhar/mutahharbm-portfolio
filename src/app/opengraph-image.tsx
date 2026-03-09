@@ -9,6 +9,7 @@ export const contentType = "image/png";
 
 const NAME = "Mutahhar Bin Muzaffar";
 const TITLE = "Frontend Engineer & React Flow Expert";
+const CTA = "Explore Projects at mutahharbm.dev";
 
 export default function OpenGraphImage() {
   return new ImageResponse(
@@ -87,6 +88,30 @@ export default function OpenGraphImage() {
                 }}
               >
                 {TITLE}
+              </div>
+            </div>
+
+            <div
+              style={{
+                display: "flex",
+                marginTop: 22,
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 999,
+                  padding: "14px 24px",
+                  background: "rgba(110,158,117,0.18)",
+                  border: "1px solid rgba(110,158,117,0.45)",
+                  color: "#d5e8d8",
+                  fontSize: 24,
+                  fontWeight: 600,
+                }}
+              >
+                {CTA}
               </div>
             </div>
           </div>
