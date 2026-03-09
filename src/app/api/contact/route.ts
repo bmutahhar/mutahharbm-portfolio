@@ -1,17 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { env } from "../../../env";
+import { contactFormSchema } from "../../../lib/contact-form-schema";
 
 export const runtime = "nodejs";
-
-type ContactPayload = {
-  email: string;
-  message: string;
-  name: string;
-};
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-const trimString = (value: unknown) => (typeof value === "string" ? value.trim() : "");
 
 const escapeHtml = (value: string) =>
   value
@@ -21,26 +13,10 @@ const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 
-const validatePayload = (payload: ContactPayload) => {
-  if (!payload.name || !payload.email || !payload.message) {
-    return "Please fill in all required fields.";
-  }
-
-  if (!emailRegex.test(payload.email)) {
-    return "Please provide a valid email address.";
-  }
-
-  if (payload.name.length > 100 || payload.email.length > 200 || payload.message.length > 5000) {
-    return "Your message is too long. Please shorten it and try again.";
-  }
-
-  return null;
-};
-
 export async function POST(request: Request) {
-  const resendApiKey = process.env.RESEND_API_KEY;
-  const fromEmail = process.env.RESEND_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>";
-  const toEmail = process.env.CONTACT_TO_EMAIL;
+  const resendApiKey = env.RESEND_API_KEY;
+  const fromEmail = env.RESEND_FROM_EMAIL ?? "Portfolio Contact <onboarding@resend.dev>";
+  const toEmail = env.CONTACT_TO_EMAIL;
 
   if (!resendApiKey || !toEmail) {
     return NextResponse.json(
@@ -57,16 +33,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request payload." }, { status: 400 });
   }
 
-  const payload: ContactPayload = {
-    name: trimString((jsonBody as Record<string, unknown>)?.name),
-    email: trimString((jsonBody as Record<string, unknown>)?.email),
-    message: trimString((jsonBody as Record<string, unknown>)?.message),
-  };
+  const parsedPayload = contactFormSchema.safeParse(jsonBody);
 
-  const validationError = validatePayload(payload);
-  if (validationError) {
-    return NextResponse.json({ error: validationError }, { status: 400 });
+  if (!parsedPayload.success) {
+    const firstIssueMessage =
+      parsedPayload.error.issues[0]?.message ?? "Please check your form values and try again.";
+    return NextResponse.json({ error: firstIssueMessage }, { status: 400 });
   }
+  const payload = parsedPayload.data;
 
   const resend = new Resend(resendApiKey);
   const safeName = escapeHtml(payload.name);

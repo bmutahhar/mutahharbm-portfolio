@@ -39,6 +39,7 @@ const NAVBAR_HEIGHT = 73;
 const CANVAS_MULTIPLIER = 3;
 const FALLBACK_NODE_WIDTH = 200;
 const FALLBACK_NODE_HEIGHT = 200;
+const RESET_HINT_ZOOM_THRESHOLD = 0.90;
 
 const nodeTypes = {
   "profile-node": ProfileNode,
@@ -152,7 +153,7 @@ const FlowContent = () => {
   const [viewportSize, setViewportSize] = useState<ViewportSize>(getViewportSize);
 
   const { fitView } = useReactFlow();
-  const { zoom } = useViewport();
+  const { x: viewportX, y: viewportY, zoom } = useViewport();
   const [nodes, setNodes, onNodesChange] = useNodesState(cloneNodes(desktopNodes));
   const [edges, setEdges, onEdgesChange] = useEdgesState(cloneEdges(desktopEdges));
 
@@ -229,10 +230,39 @@ const FlowContent = () => {
     });
   }, [activeNodeIds, fitView]);
 
+  const hasVisibleNodes = useMemo(() => {
+    const safeZoom = Math.max(zoom, 0.01);
+    const viewportMinX = -viewportX / safeZoom;
+    const viewportMinY = -viewportY / safeZoom;
+    const viewportMaxX = viewportMinX + viewportSize.width / safeZoom;
+    const viewportMaxY = viewportMinY + viewportSize.height / safeZoom;
+
+    return nodes.some((node) => {
+      const nodeWidth = node.measured?.width ?? node.width ?? FALLBACK_NODE_WIDTH;
+      const nodeHeight = node.measured?.height ?? node.height ?? FALLBACK_NODE_HEIGHT;
+      const nodeMinX = node.position.x;
+      const nodeMinY = node.position.y;
+      const nodeMaxX = nodeMinX + nodeWidth;
+      const nodeMaxY = nodeMinY + nodeHeight;
+
+      return (
+        nodeMaxX >= viewportMinX &&
+        nodeMinX <= viewportMaxX &&
+        nodeMaxY >= viewportMinY &&
+        nodeMinY <= viewportMaxY
+      );
+    });
+  }, [nodes, viewportSize.height, viewportSize.width, viewportX, viewportY, zoom]);
+  const isCanvasEmpty = !hasVisibleNodes || zoom > RESET_HINT_ZOOM_THRESHOLD;
+
   return (
     <>
       <CustomCursor />
-      <PortfolioNavbar onNavigate={handleNavigate} onResetView={handleResetView} />
+      <PortfolioNavbar
+        onNavigate={handleNavigate}
+        onResetView={handleResetView}
+        isCanvasEmpty={isCanvasEmpty}
+      />
 
       <div className="relative h-screen w-screen overflow-hidden pt-[73px]">
         <DotBackground />

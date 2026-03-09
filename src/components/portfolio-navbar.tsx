@@ -10,9 +10,10 @@ import type { NavItemId } from "./navbar/nav-items";
 type PortfolioNavbarProps = {
   onNavigate: (nodeId: string) => void;
   onResetView: () => void;
+  isCanvasEmpty: boolean;
 };
 
-export const PortfolioNavbar = ({ onNavigate, onResetView }: PortfolioNavbarProps) => {
+export const PortfolioNavbar = ({ onNavigate, onResetView, isCanvasEmpty }: PortfolioNavbarProps) => {
   const { resolvedTheme, setTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -45,7 +46,7 @@ export const PortfolioNavbar = ({ onNavigate, onResetView }: PortfolioNavbarProp
             className="flex items-center gap-3"
             aria-label="Reset canvas view"
           >
-            <BrandLogo />
+            <BrandLogo isRippleActive={isCanvasEmpty} />
             <div>
               <h1 className="bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-sm font-semibold text-transparent">
                 {PROFILE_CONTENT.name}

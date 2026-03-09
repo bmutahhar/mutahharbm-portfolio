@@ -1,3 +1,5 @@
+import { env } from "../env";
+
 const trimTrailingSlash = (url: string) => url.replace(/\/+$/, "");
 
 const withProtocol = (url: string) => {
@@ -9,13 +11,13 @@ const withProtocol = (url: string) => {
 };
 
 const getSiteUrl = () => {
-  const configuredUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL;
+  const configuredUrl = env.NEXT_PUBLIC_SITE_URL ?? env.SITE_URL;
 
   if (configuredUrl) {
     return trimTrailingSlash(withProtocol(configuredUrl));
   }
 
-  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  const vercelUrl = env.VERCEL_PROJECT_PRODUCTION_URL ?? env.VERCEL_URL;
 
   if (vercelUrl) {
     return trimTrailingSlash(withProtocol(vercelUrl));

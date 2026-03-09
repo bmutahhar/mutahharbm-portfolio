@@ -1,24 +1,49 @@
+import { motion, useReducedMotion } from "motion/react";
 import { useId } from "react";
 import { cn } from "../ui/utils";
 
 type BrandLogoProps = {
   className?: string;
+  isRippleActive?: boolean;
   size?: number;
 };
 
-export const BrandLogo = ({ className, size = 42 }: BrandLogoProps) => {
+export const BrandLogo = ({ className, isRippleActive = false, size = 42 }: BrandLogoProps) => {
   const gradientId = useId().replace(/:/g, "");
+  const shouldReduceMotion = useReducedMotion();
+  const shouldAnimateRipple = isRippleActive && !shouldReduceMotion;
   const svgWidth = Math.round(size * 0.82);
   const svgHeight = Math.round(size * 0.34);
 
   return (
     <div
       className={cn(
-        "flex items-center justify-center rounded-full border border-primary/40 bg-gradient-to-br from-primary/30 to-primary/10 shadow-lg",
+        "cursor-pointer relative flex items-center justify-center rounded-full border border-primary/40 bg-gradient-to-br from-primary/30 to-primary/10 shadow-lg",
         className,
       )}
       style={{ height: size, width: size }}
     >
+      {shouldAnimateRipple ? (
+        <>
+          <motion.span
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-2 rounded-full border-2 border-primary/60"
+            animate={{ scale: [0.86, 1.44], opacity: [0, 0.45, 0] }}
+            transition={{ duration: 2.4, ease: "easeOut", repeat: Number.POSITIVE_INFINITY }}
+          />
+          <motion.span
+            aria-hidden="true"
+            className="pointer-events-none absolute -inset-2 rounded-full border-2 border-primary/60"
+            animate={{ scale: [0.86, 1.44], opacity: [0, 0.45, 0] }}
+            transition={{
+              duration: 2.4,
+              delay: 1.2,
+              ease: "easeOut",
+              repeat: Number.POSITIVE_INFINITY,
+            }}
+          />
+        </>
+      ) : null}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width={svgWidth}

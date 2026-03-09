@@ -2,9 +2,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Mail, Linkedin, Github, Send, Phone } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { CONTACT_LINKS } from "../../data/portfolio-content";
+import { contactFormSchema, type ContactFormValues } from "../../lib/contact-form-schema";
 
 interface ContactDialogProps {
   open: boolean;
@@ -19,16 +23,19 @@ const iconByContact = {
 } as const;
 
 export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      message: "",
+    },
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<{
     message: string;
     status: "error" | "success";
   } | null>(null);
+  const isSubmitting = form.formState.isSubmitting;
   const directContacts = CONTACT_LINKS.filter(
     (contact) => contact.id === "email" || contact.id === "phone",
   );
@@ -36,14 +43,8 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
     (contact) => contact.id === "linkedin" || contact.id === "github",
   );
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isSubmitting) {
-      return;
-    }
-
+  const handleSubmit = async (values: ContactFormValues) => {
     setSubmitState(null);
-    setIsSubmitting(true);
 
     try {
       const response = await fetch("/api/contact", {
@@ -51,7 +52,7 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(values),
       });
       const body = (await response.json().catch(() => null)) as { error?: string } | null;
 
@@ -67,14 +68,12 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
         status: "success",
         message: "Thanks for reaching out. Your message has been sent successfully.",
       });
-      setFormData({ name: "", email: "", message: "" });
+      form.reset();
     } catch {
       setSubmitState({
         status: "error",
         message: "Network error while sending message. Please try again.",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -146,66 +145,83 @@ export function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
 
           <section className="h-full rounded-2xl border border-border/80 bg-card/40 p-5">
             <h3 className="text-lg font-semibold">Send a Message</h3>
-            <form onSubmit={handleSubmit} className="mt-4 flex h-full flex-col gap-4">
-              <div>
-                <label htmlFor="name" className="text-sm font-medium mb-2 block">
-                  Name
-                </label>
-                <Input
-                  id="name"
-                  placeholder="Your name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="h-11"
-                  disabled={isSubmitting}
-                  required
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleSubmit)}
+                className="mt-4 flex h-full flex-col gap-4"
+              >
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your name"
+                          className="h-11"
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <label htmlFor="email" className="text-sm font-medium mb-2 block">
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="your.email@example.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="h-11"
-                  disabled={isSubmitting}
-                  required
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="your.email@example.com"
+                          className="h-11"
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <div>
-                <label htmlFor="message" className="text-sm font-medium mb-2 block">
-                  Message
-                </label>
-                <Textarea
-                  id="message"
-                  placeholder="Tell me about your project or opportunity..."
-                  rows={7}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="h-40"
-                  disabled={isSubmitting}
-                  required
+                <FormField
+                  control={form.control}
+                  name="message"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Message</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Tell me about your project or opportunity..."
+                          rows={7}
+                          className="h-44"
+                          disabled={isSubmitting}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              </div>
-              <Button type="submit" className="mt-1 w-full" size="lg" disabled={isSubmitting}>
-                <Send className="w-4 h-4 mr-2" />
-                {isSubmitting ? "Sending..." : "Send Message"}
-              </Button>
-              {submitState ? (
-                <p
-                  aria-live="polite"
-                  className={`text-sm ${
-                    submitState.status === "success" ? "text-primary" : "text-destructive"
-                  }`}
-                >
-                  {submitState.message}
-                </p>
-              ) : null}
-            </form>
+                <Button type="submit" className="mt-1 w-full" size="lg" disabled={isSubmitting}>
+                  <Send className="w-4 h-4 mr-2" />
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </Button>
+                {submitState ? (
+                  <p
+                    aria-live="polite"
+                    className={`text-sm ${
+                      submitState.status === "success" ? "text-primary" : "text-destructive"
+                    }`}
+                  >
+                    {submitState.message}
+                  </p>
+                ) : null}
+              </form>
+            </Form>
           </section>
         </div>
       </DialogContent>
