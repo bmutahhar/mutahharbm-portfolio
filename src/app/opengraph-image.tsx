@@ -32,8 +32,6 @@ export default function OpenGraphImage() {
           style={{
             width: "100%",
             height: "100%",
-            borderRadius: 28,
-            border: "1px solid rgba(110,158,117,0.35)",
             background:
               "linear-gradient(120deg, rgba(110,158,117,0.14), rgba(110,158,117,0.04) 40%, rgba(110,158,117,0.12))",
             display: "flex",
