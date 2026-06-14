@@ -1,29 +1,28 @@
+# Mutahhar Portfolio — Signal Graph
 
-# Mutahhar Portfolio
-
-Interactive portfolio built with Next.js App Router and React Flow.
+Interactive portfolio built as a node-graph editor: the career is modeled as a
+pipeline (education + skills → profile → experience → work → impact → contact/resume)
+on an infinite React Flow canvas.
 
 ## Tech Stack
 
-- Next.js 16
-- React 18
+- Next.js 16 (App Router) + React 19
 - TypeScript
 - React Flow (`@xyflow/react`)
-- Tailwind CSS v4
-- Motion (`motion/react`)
-- shadcn/ui + Radix + Vaul
-- next-themes
+- Tailwind CSS v4 (CSS-first tokens, oklch palette)
+- shadcn/ui primitives (button, drawer, form, command) + Vaul + cmdk
+- next-themes (dark default, light "drafting paper" theme)
+- Bricolage Grotesque + IBM Plex Mono via `next/font`
 
 ## Features
 
-- Interactive node-based portfolio canvas
-- Custom glowing animated edges
-- Responsive layouts for desktop, tablet, and mobile
-- Theme toggle (light/dark)
-- Mobile/tablet drawer navigation
-- Dialog-based section content (profile, work, experience, skills, education, contact)
-- Resume node that opens the PDF in a new tab
-- Branded monogram logo (`mbm.`) used in navbar
+- Pipeline-shaped canvas with typed ports and kind-tinted animated signal edges
+- Single inspector surface for node details — side panel on desktop, bottom sheet on mobile
+- Guided tour ("run" the graph) with camera moves, captions, and keyboard control
+- ⌘K command palette: jump to modules, copy email, toggle theme, download resume
+- Editor chrome: zoom dock, CAD-style status readouts, re-center rescue pill, onboarding hint
+- Contact form (react-hook-form + zod) delivered through Resend
+- Server-rendered semantic text fallback + structured data for SEO
 
 ## Getting Started
 
@@ -44,7 +43,7 @@ Interactive portfolio built with Next.js App Router and React Flow.
 
 ## Contact Form (Resend)
 
-The "Get In Touch" dialog sends messages through a server route backed by Resend.
+The contact view sends messages through `POST /api/contact` backed by Resend.
 
 Set these environment variables:
 
@@ -54,20 +53,30 @@ Set these environment variables:
 
 ## Project Structure
 
-- `src/app` - Next.js app router files (`layout`, `page`, global styles)
-- `src/components` - flow canvas, navbar, dialogs, shared UI
-- `src/components/nodes` - reusable node components and wrappers
-- `src/components/navbar` - desktop/mobile navbar + theme toggle + brand logo
-- `src/data/flow-layout-data.ts` - desktop/tablet/mobile nodes and edges
-- `public` - static assets (resume PDF, logo SVGs)
+- `src/app` - App Router files (layout, page, global styles, og image, SEO routes)
+- `src/components/canvas` - graph data, providers, camera, compound `NodeCard`
+  primitives, ports, signal edge, and the eight node modules (`nodes/`)
+- `src/components/inspector` - inspector shell, shared view primitives, per-kind
+  detail views (`views/`)
+- `src/components/chrome` - top bar, dock, command menu, tour, hints, status
+  readouts, boot screen
+- `src/components/ui` - shadcn/ui primitives actually in use
+- `src/data/portfolio-content.ts` - all portfolio content (single source of truth)
+- `public` - static assets (resume PDF, favicons)
 
-## Brand Assets
+## Architecture Notes
 
-- Primary navbar logo: `public/mbm-logo.svg`
-- Alternate logo variant: `public/mbm-logo-v2.svg`
+- `CanvasProvider` exposes a `{ state, actions }` context; consumers never know
+  how state is stored (composition over prop drilling).
+- `NodeCard` is a compound component — each node composes Eyebrow/Title/Body/
+  Stat/ChipRow/Footer and inherits its kind accent via the `--node-accent` CSS
+  variable.
+- Camera moves go through `use-camera.ts` (`setViewport`/`setCenter`), avoiding
+  react-flow's queued `fitView`, which never flushes on a static controlled graph.
+- The canvas bundle is loaded with `next/dynamic` (`ssr: false`) behind a boot
+  screen; the server response still carries full text content for crawlers.
 
 ## Quality Setup
 
 - ESLint configured with strict no-warning policy
 - Husky enabled via `prepare` script
-  
