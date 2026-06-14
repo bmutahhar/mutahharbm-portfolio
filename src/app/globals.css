@@ -4,116 +4,101 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * "Signal Graph" design system.
+ * Light theme: drafting paper — warm paper white, ink text, deepened accents.
+ * Dark theme (default): graphite & signal — warm near-black, hairlines, chartreuse signal.
+ * Per-node-kind hues are used sparingly: port dots, eyebrow labels, edge tints.
+ */
+
 :root {
-  --background: rgb(252, 253, 251);
-  --foreground: rgb(45, 54, 46);
-  --card: rgb(255, 255, 255);
-  --card-foreground: rgb(45, 54, 46);
-  --popover: rgb(255, 255, 255);
-  --popover-foreground: rgb(45, 54, 46);
-  --primary: rgb(110, 158, 117);
-  --primary-foreground: rgb(255, 255, 255);
-  --secondary: rgb(237, 243, 238);
-  --secondary-foreground: rgb(61, 86, 66);
-  --muted: rgb(241, 245, 242);
-  --muted-foreground: rgb(98, 122, 103);
-  --accent: rgb(240, 247, 241);
-  --accent-foreground: rgb(61, 86, 66);
-  --destructive: rgb(229, 115, 115);
-  --destructive-foreground: rgb(255, 255, 255);
-  --border: rgb(226, 235, 227);
-  --input: rgb(226, 235, 227);
-  --ring: rgb(110, 158, 117);
-  --chart-1: rgb(110, 158, 117);
-  --chart-2: rgb(157, 192, 163);
-  --chart-3: rgb(209, 224, 212);
-  --chart-4: rgb(174, 208, 180);
-  --chart-5: rgb(196, 219, 202);
-  --sidebar: rgb(248, 250, 248);
-  --sidebar-foreground: rgb(61, 86, 66);
-  --sidebar-primary: rgb(110, 158, 117);
-  --sidebar-primary-foreground: rgb(255, 255, 255);
-  --sidebar-accent: rgb(237, 243, 238);
-  --sidebar-accent-foreground: rgb(61, 86, 66);
-  --sidebar-border: rgb(226, 235, 227);
-  --sidebar-ring: rgb(110, 158, 117);
-  --font-sans: Inter, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 1rem;
-  --shadow-x: 0px;
-  --shadow-y: 10px;
-  --shadow-blur: 25px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.08;
-  --shadow-color: 110 158 117;
-  --shadow-2xs: 0px 10px 25px 0px hsl(110 158 117 / 0.04);
-  --shadow-xs: 0px 10px 25px 0px hsl(110 158 117 / 0.04);
-  --shadow-sm: 0px 10px 25px 0px hsl(110 158 117 / 0.08), 0px 1px 2px -1px hsl(110 158 117 / 0.08);
-  --shadow: 0px 10px 25px 0px hsl(110 158 117 / 0.08), 0px 1px 2px -1px hsl(110 158 117 / 0.08);
-  --shadow-md: 0px 10px 25px 0px hsl(110 158 117 / 0.08), 0px 2px 4px -1px hsl(110 158 117 / 0.08);
-  --shadow-lg: 0px 10px 25px 0px hsl(110 158 117 / 0.08), 0px 4px 6px -1px hsl(110 158 117 / 0.08);
-  --shadow-xl: 0px 10px 25px 0px hsl(110 158 117 / 0.08), 0px 8px 10px -1px hsl(110 158 117 / 0.08);
-  --shadow-2xl: 0px 10px 25px 0px hsl(110 158 117 / 0.2);
-  --tracking-normal: -0.01em;
-  --spacing: 0.25rem;
-  --dot-grid-color: 10 31 15;
-  --dot-grid-opacity: 0.14;
+  --background: oklch(0.965 0.008 95);
+  --foreground: oklch(0.27 0.018 110);
+  --card: oklch(0.99 0.004 95);
+  --card-foreground: oklch(0.27 0.018 110);
+  --popover: oklch(0.99 0.004 95);
+  --popover-foreground: oklch(0.27 0.018 110);
+  --primary: oklch(0.5 0.14 128);
+  --primary-foreground: oklch(0.98 0.005 95);
+  --secondary: oklch(0.93 0.01 100);
+  --secondary-foreground: oklch(0.32 0.02 115);
+  --muted: oklch(0.93 0.01 100);
+  --muted-foreground: oklch(0.49 0.02 110);
+  --accent: oklch(0.9 0.03 120);
+  --accent-foreground: oklch(0.3 0.03 125);
+  --destructive: oklch(0.55 0.19 27);
+  --destructive-foreground: oklch(0.98 0.005 95);
+  --border: oklch(0.87 0.012 100);
+  --input: oklch(0.87 0.012 100);
+  --ring: oklch(0.5 0.14 128);
+  --radius: 0.75rem;
+
+  --kind-profile: oklch(0.5 0.14 128);
+  --kind-skills: oklch(0.5 0.15 295);
+  --kind-experience: oklch(0.56 0.13 75);
+  --kind-work: oklch(0.52 0.11 215);
+  --kind-impact: oklch(0.55 0.17 25);
+  --kind-education: oklch(0.5 0.13 255);
+  --kind-contact: oklch(0.52 0.13 160);
+  --kind-resume: oklch(0.45 0.02 110);
+
+  --grid-dot: oklch(0.27 0.018 110 / 0.22);
+  --grid-line: oklch(0.27 0.018 110 / 0.07);
+  --canvas-vignette: oklch(0.9 0.012 100 / 0.55);
+  --node-sheen: oklch(1 0 0 / 0.65);
+  --edge-rest: oklch(0.27 0.018 110 / 0.28);
+
+  --font-sans: var(--font-display), "Bricolage Grotesque", ui-sans-serif, sans-serif;
+  --font-mono: var(--font-plex-mono), "IBM Plex Mono", ui-monospace, monospace;
+
+  --shadow-color: oklch(0.3 0.02 110 / 0.1);
+  --shadow-sm: 0 1px 2px var(--shadow-color);
+  --shadow: 0 1px 2px var(--shadow-color), 0 8px 24px -12px var(--shadow-color);
+  --shadow-md: 0 2px 4px var(--shadow-color), 0 12px 32px -12px var(--shadow-color);
+  --shadow-lg: 0 2px 6px var(--shadow-color), 0 24px 48px -16px var(--shadow-color);
 }
 
 .dark {
-  --background: rgb(10, 12, 10);
-  --foreground: rgb(241, 245, 242);
-  --card: rgb(18, 21, 18);
-  --card-foreground: rgb(241, 245, 242);
-  --popover: rgb(18, 21, 18);
-  --popover-foreground: rgb(241, 245, 242);
-  --primary: rgb(110, 158, 117);
-  --primary-foreground: rgb(255, 255, 255);
-  --secondary: rgb(26, 33, 27);
-  --secondary-foreground: rgb(241, 245, 242);
-  --muted: rgb(26, 33, 27);
-  --muted-foreground: rgb(140, 162, 144);
-  --accent: rgb(31, 40, 32);
-  --accent-foreground: rgb(241, 245, 242);
-  --destructive: rgb(122, 53, 53);
-  --destructive-foreground: rgb(255, 255, 255);
-  --border: rgb(31, 40, 32);
-  --input: rgb(31, 40, 32);
-  --ring: rgb(110, 158, 117);
-  --chart-1: rgb(110, 158, 117);
-  --chart-2: rgb(77, 110, 82);
-  --chart-3: rgb(49, 71, 53);
-  --chart-4: rgb(126, 176, 134);
-  --chart-5: rgb(157, 192, 163);
-  --sidebar: rgb(8, 10, 8);
-  --sidebar-foreground: rgb(140, 162, 144);
-  --sidebar-primary: rgb(110, 158, 117);
-  --sidebar-primary-foreground: rgb(255, 255, 255);
-  --sidebar-accent: rgb(26, 33, 27);
-  --sidebar-accent-foreground: rgb(241, 245, 242);
-  --sidebar-border: rgb(26, 33, 27);
-  --sidebar-ring: rgb(110, 158, 117);
-  --font-sans: Inter, sans-serif;
-  --font-serif: Georgia, serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 1rem;
-  --shadow-x: 0px;
-  --shadow-y: 15px;
-  --shadow-blur: 30px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.5;
-  --shadow-color: 0 0 0;
-  --shadow-2xs: 0px 15px 30px 0px hsl(0 0 0 / 0.25);
-  --shadow-xs: 0px 15px 30px 0px hsl(0 0 0 / 0.25);
-  --shadow-sm: 0px 15px 30px 0px hsl(0 0 0 / 0.5), 0px 1px 2px -1px hsl(0 0 0 / 0.5);
-  --shadow: 0px 15px 30px 0px hsl(0 0 0 / 0.5), 0px 1px 2px -1px hsl(0 0 0 / 0.5);
-  --shadow-md: 0px 15px 30px 0px hsl(0 0 0 / 0.5), 0px 2px 4px -1px hsl(0 0 0 / 0.5);
-  --shadow-lg: 0px 15px 30px 0px hsl(0 0 0 / 0.5), 0px 4px 6px -1px hsl(0 0 0 / 0.5);
-  --shadow-xl: 0px 15px 30px 0px hsl(0 0 0 / 0.5), 0px 8px 10px -1px hsl(0 0 0 / 0.5);
-  --shadow-2xl: 0px 15px 30px 0px hsl(0 0 0 / 1.25);
-  --dot-grid-color: 241 245 242;
-  --dot-grid-opacity: 0.2;
+  --background: oklch(0.165 0.006 120);
+  --foreground: oklch(0.94 0.012 110);
+  --card: oklch(0.205 0.008 120);
+  --card-foreground: oklch(0.94 0.012 110);
+  --popover: oklch(0.22 0.008 120);
+  --popover-foreground: oklch(0.94 0.012 110);
+  --primary: oklch(0.89 0.2 125);
+  --primary-foreground: oklch(0.2 0.03 125);
+  --secondary: oklch(0.26 0.01 120);
+  --secondary-foreground: oklch(0.9 0.015 115);
+  --muted: oklch(0.25 0.009 120);
+  --muted-foreground: oklch(0.66 0.015 115);
+  --accent: oklch(0.29 0.02 122);
+  --accent-foreground: oklch(0.92 0.05 122);
+  --destructive: oklch(0.65 0.18 25);
+  --destructive-foreground: oklch(0.16 0.02 25);
+  --border: oklch(0.3 0.01 120);
+  --input: oklch(0.3 0.01 120);
+  --ring: oklch(0.89 0.2 125);
+
+  --kind-profile: oklch(0.89 0.2 125);
+  --kind-skills: oklch(0.76 0.13 295);
+  --kind-experience: oklch(0.82 0.13 80);
+  --kind-work: oklch(0.8 0.11 215);
+  --kind-impact: oklch(0.73 0.15 25);
+  --kind-education: oklch(0.74 0.11 255);
+  --kind-contact: oklch(0.79 0.14 160);
+  --kind-resume: oklch(0.8 0.012 110);
+
+  --grid-dot: oklch(0.94 0.012 110 / 0.16);
+  --grid-line: oklch(0.94 0.012 110 / 0.05);
+  --canvas-vignette: oklch(0.1 0.005 120 / 0.6);
+  --node-sheen: oklch(1 0 0 / 0.07);
+  --edge-rest: oklch(0.94 0.012 110 / 0.2);
+
+  --shadow-color: oklch(0 0 0 / 0.45);
+  --shadow-sm: 0 1px 2px var(--shadow-color);
+  --shadow: 0 1px 2px var(--shadow-color), 0 8px 24px -10px var(--shadow-color);
+  --shadow-md: 0 2px 4px var(--shadow-color), 0 14px 36px -12px var(--shadow-color);
+  --shadow-lg: 0 2px 6px var(--shadow-color), 0 28px 56px -16px var(--shadow-color);
 }
 
 @theme inline {
@@ -136,48 +121,28 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+
+  --color-kind-profile: var(--kind-profile);
+  --color-kind-skills: var(--kind-skills);
+  --color-kind-experience: var(--kind-experience);
+  --color-kind-work: var(--kind-work);
+  --color-kind-impact: var(--kind-impact);
+  --color-kind-education: var(--kind-education);
+  --color-kind-contact: var(--kind-contact);
+  --color-kind-resume: var(--kind-resume);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
   --shadow: var(--shadow);
   --shadow-md: var(--shadow-md);
   --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
-
-  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
-  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
-  --tracking-normal: var(--tracking-normal);
-  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
-  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
-  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
-}
-
-body {
-  letter-spacing: var(--tracking-normal);
 }
 
 @layer base {
@@ -187,5 +152,94 @@ body {
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  ::selection {
+    background: var(--primary);
+    color: var(--primary-foreground);
+  }
+}
+
+/* ---- React Flow ---- */
+
+.react-flow__node {
+  border-radius: var(--radius);
+}
+
+.react-flow__node:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+
+.react-flow__edge .signal-edge-flow {
+  stroke-dasharray: 7 9;
+  animation: signal-dash 1.2s linear infinite;
+}
+
+.react-flow__attribution {
+  display: none;
+}
+
+@keyframes signal-dash {
+  to {
+    stroke-dashoffset: -16;
+  }
+}
+
+/* Staggered node entrance: each node sets --enter-delay.
+ * Applied to an inner wrapper only — never to the element React Flow measures
+ * handle bounds from, or those bounds get cached mid-transform (edges then
+ * attach toward the node middle instead of the ports). */
+.node-enter {
+  animation: node-enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--enter-delay, 0s);
+}
+
+@keyframes node-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes port-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in oklch, var(--node-accent, var(--primary)) 25%, transparent);
+  }
+}
+
+.port-pulse {
+  animation: port-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.caret-blink {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .node-enter,
+  .port-pulse,
+  .caret-blink,
+  .react-flow__edge .signal-edge-flow {
+    animation: none;
   }
 }

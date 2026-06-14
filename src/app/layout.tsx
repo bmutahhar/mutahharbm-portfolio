@@ -1,9 +1,23 @@
 import type { Metadata } from "next";
+import { Bricolage_Grotesque, IBM_Plex_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import { PROFILE_CONTENT } from "../data/portfolio-content";
 import { ThemeProvider } from "../components/theme-provider";
 import { siteUrl } from "./site-config";
 import "./globals.css";
+
+const displayFont = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+});
+
+const monoFont = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-plex-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -81,8 +95,12 @@ type RootLayoutProps = {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
-      <body className="min-h-screen bg-background text-foreground antialiased">
+    <html
+      lang="en"
+      className={`dark ${displayFont.variable} ${monoFont.variable}`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen bg-background font-sans text-foreground antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

@@ -78,6 +78,11 @@ export type ImpactMetric = {
   context: string;
 };
 
+export const RESUME_PDF = {
+  href: "/mutahhar-bin-muzaffar-frontend-engineer-resume.pdf",
+  fileName: "mutahhar-bin-muzaffar-frontend-engineer-resume.pdf",
+} as const;
+
 export const PROFILE_CONTENT: ProfileContent = {
   name: "Mutahhar Bin Muzaffar",
   shortName: "Mutahhar BM",
